@@ -40,7 +40,6 @@ namespace Racing.DataAccess.Entities
             return score;
         }
 
-
         public override string ToString()
         {
             return $"Name: {Name}\nAcceleration: {Acceleration}\n" +
