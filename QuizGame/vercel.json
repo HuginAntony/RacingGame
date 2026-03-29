@@ -1,0 +1,5 @@
+{
+  "env": {
+    "NEXT_PUBLIC_PARTYKIT_HOST": "@partykit-host"
+  }
+}

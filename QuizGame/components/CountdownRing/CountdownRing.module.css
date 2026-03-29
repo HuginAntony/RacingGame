@@ -1,0 +1,27 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+}
+
+.svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.arc {
+  transition: stroke-dashoffset 1s linear, stroke 0.4s ease;
+}
+
+.number {
+  font-size: 1.6rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  transition: color 0.4s ease;
+  text-shadow: 0 0 10px currentColor;
+  z-index: 1;
+}

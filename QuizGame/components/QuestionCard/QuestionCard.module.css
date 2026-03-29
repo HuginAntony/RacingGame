@@ -1,0 +1,134 @@
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--neon-cyan);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.15), 0 0 40px rgba(0, 255, 255, 0.05);
+  transform-style: preserve-3d;
+  transition: transform 0.4s ease;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.category {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--neon-cyan);
+  margin-bottom: 1rem;
+  opacity: 0.75;
+}
+
+.question {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+  min-height: 60px;
+}
+
+.answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 520px) {
+  .answers {
+    grid-template-columns: 1fr;
+  }
+  .question {
+    font-size: 1.1rem;
+  }
+}
+
+.answerBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--answer-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.15s ease, border-color 0.2s ease, box-shadow 0.2s ease,
+    background 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  perspective: 600px;
+}
+
+.answerBtn:not(:disabled):hover {
+  border-color: var(--neon-cyan);
+  transform: translateY(-2px) scale(1.02) translateZ(8px);
+  box-shadow: 0 0 14px rgba(0, 255, 255, 0.35);
+}
+
+.answerBtn:disabled {
+  cursor: default;
+}
+
+.answerLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: var(--label-bg);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  flex-shrink: 0;
+}
+
+/* ─── Selected state ─────────────────────────────────── */
+.selected {
+  border-color: var(--neon-pink);
+  box-shadow: 0 0 12px rgba(255, 0, 200, 0.4);
+}
+
+/* ─── Correct answer reveal (3D flip feel via glow + scale) ── */
+.correct {
+  border-color: var(--neon-green) !important;
+  background: rgba(0, 255, 100, 0.08) !important;
+  box-shadow: 0 0 0 2px var(--neon-green), 0 0 24px rgba(0, 255, 100, 0.5) !important;
+  animation: correctFlip 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes correctFlip {
+  0% {
+    transform: perspective(600px) rotateY(0deg) scale(1);
+  }
+  40% {
+    transform: perspective(600px) rotateY(90deg) scale(1.04);
+  }
+  60% {
+    transform: perspective(600px) rotateY(-10deg) scale(1.06);
+  }
+  100% {
+    transform: perspective(600px) rotateY(0deg) scale(1.04);
+  }
+}
+
+/* ─── Wrong answer shake ──────────────────────────────── */
+.wrong {
+  border-color: var(--neon-red) !important;
+  background: rgba(255, 50, 50, 0.08) !important;
+  box-shadow: 0 0 0 2px var(--neon-red), 0 0 20px rgba(255, 50, 50, 0.4) !important;
+  animation: shake 0.4s ease forwards;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-8px); }
+  40%       { transform: translateX(8px); }
+  60%       { transform: translateX(-5px); }
+  80%       { transform: translateX(5px); }
+}

@@ -1,0 +1,70 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease,
+    border-color 0.2s ease;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ─── Cyan variant ─── */
+.cyan {
+  background: rgba(0, 255, 255, 0.1);
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+.cyan:not(:disabled):hover {
+  transform: translateY(-2px) scale(1.03) translateZ(6px);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5), 0 0 40px rgba(0, 255, 255, 0.2);
+  background: rgba(0, 255, 255, 0.18);
+}
+.cyan:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+/* ─── Pink variant ─── */
+.pink {
+  background: rgba(255, 0, 200, 0.1);
+  border-color: var(--neon-pink);
+  color: var(--neon-pink);
+}
+.pink:not(:disabled):hover {
+  transform: translateY(-2px) scale(1.03) translateZ(6px);
+  box-shadow: 0 0 20px rgba(255, 0, 200, 0.5), 0 0 40px rgba(255, 0, 200, 0.2);
+  background: rgba(255, 0, 200, 0.18);
+}
+.pink:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+/* ─── Ghost variant ─── */
+.ghost {
+  background: transparent;
+  border-color: var(--border-subtle);
+  color: var(--text-muted);
+}
+.ghost:not(:disabled):hover {
+  border-color: var(--text-muted);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}

@@ -1,0 +1,74 @@
+/* --- Neon Dark Theme -------------------------------------------------- */
+:root {
+  --neon-cyan:   #00f5ff;
+  --neon-pink:   #ff00c8;
+  --neon-green:  #00ff64;
+  --neon-red:    #ff3232;
+  --neon-orange: #ff8c00;
+  --neon-gold:   #ffc800;
+
+  --bg-deep:     #05060f;
+  --bg-surface:  #0d0e1e;
+  --card-bg:     #111228;
+  --answer-bg:   #161830;
+  --label-bg:    rgba(0, 245, 255, 0.08);
+
+  --border-subtle: rgba(255, 255, 255, 0.1);
+
+  --text-primary: #e8eaf6;
+  --text-muted:   rgba(232, 234, 246, 0.5);
+
+  color-scheme: dark;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background-color: var(--bg-deep);
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(0, 245, 255, 0.04) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 90%, rgba(255, 0, 200, 0.04) 0%, transparent 55%);
+  color: var(--text-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+input  { font-family: inherit; }
+
+.container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+}
+
+.neonText {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px rgba(0, 245, 255, 0.6);
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-surface); }
+::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 3px; }
