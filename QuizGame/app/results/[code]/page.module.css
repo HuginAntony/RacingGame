@@ -65,6 +65,12 @@
   text-align: center;
 }
 
+.lbAvatar {
+  font-size: 1.25rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
 .lbName {
   flex: 1;
   font-weight: 600;

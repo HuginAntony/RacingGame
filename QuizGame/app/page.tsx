@@ -8,24 +8,28 @@ import styles from "./page.module.css";
 
 type Mode = "home" | "solo" | "create" | "join";
 
+const AVATARS = ["⚡", "🦊", "🐉", "🚀", "🎯", "🌟", "🔥", "🦁", "🐺", "🦋", "🎮", "🌈", "💀", "🤖", "👾", "🎸", "🧙", "🐬", "🦄", "🐙"];
+
 export default function HomePage() {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("home");
   const [nickname, setNickname] = useState("");
+  const [avatar, setAvatar] = useState("⚡");
   const [roomCode, setRoomCode] = useState("");
   const [error, setError] = useState("");
+  const [soloRounds, setSoloRounds] = useState(10);
 
   function handleSolo() {
     const name = nickname.trim();
     if (!name) { setError("Enter a nickname first"); return; }
-    router.push("/game/solo?name=" + encodeURIComponent(name));
+    router.push("/game/solo?name=" + encodeURIComponent(name) + "&avatar=" + encodeURIComponent(avatar) + "&rounds=" + soloRounds);
   }
 
   function handleCreate() {
     const name = nickname.trim();
     if (!name) { setError("Enter a nickname first"); return; }
     const code = generateCode();
-    router.push("/lobby/" + code + "?name=" + encodeURIComponent(name) + "&host=1");
+    router.push("/lobby/" + code + "?name=" + encodeURIComponent(name) + "&avatar=" + encodeURIComponent(avatar) + "&host=1");
   }
 
   function handleJoin() {
@@ -33,7 +37,7 @@ export default function HomePage() {
     const code = roomCode.trim().toUpperCase();
     if (!name) { setError("Enter a nickname first"); return; }
     if (code.length < 4) { setError("Enter a valid room code"); return; }
-    router.push("/lobby/" + code + "?name=" + encodeURIComponent(name));
+    router.push("/lobby/" + code + "?name=" + encodeURIComponent(name) + "&avatar=" + encodeURIComponent(avatar));
   }
 
   return (
@@ -57,6 +61,20 @@ export default function HomePage() {
             autoFocus
           />
         </div>
+        <div className={styles.field}>
+          <label className={styles.label}>Choose Avatar</label>
+          <div className={styles.avatarGrid}>
+            {AVATARS.map((emoji) => (
+              <button
+                key={emoji}
+                type="button"
+                className={styles.avatarBtn + (avatar === emoji ? " " + styles.avatarSelected : "")}
+                onClick={() => setAvatar(emoji)}
+                aria-label={emoji}
+              >{emoji}</button>
+            ))}
+          </div>
+        </div>
         {error && <p className={styles.error}>{error}</p>}
         {mode === "home" && (
           <div className={styles.modeGrid}>
@@ -67,6 +85,19 @@ export default function HomePage() {
         )}
         {mode === "solo" && (
           <div className={styles.actionGroup}>
+            <div className={styles.roundSelector}>
+              <span className={styles.roundLabel}>Number of Questions</span>
+              <div className={styles.roundBtns}>
+                {[5, 10, 15, 20].map((n) => (
+                  <button
+                    key={n}
+                    type="button"
+                    className={styles.roundBtn + (soloRounds === n ? " " + styles.roundBtnActive : "")}
+                    onClick={() => setSoloRounds(n)}
+                  >{n}</button>
+                ))}
+              </div>
+            </div>
             <NeonButton variant="cyan" fullWidth onClick={handleSolo}>Start Solo Game</NeonButton>
             <NeonButton variant="ghost" onClick={() => setMode("home")}>&larr; Back</NeonButton>
           </div>

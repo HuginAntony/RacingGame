@@ -36,6 +36,7 @@ export function TrophyBanner({ winner, isCurrentPlayer }: TrophyBannerProps) {
   return (
     <div className={styles.banner}>
       <div className={styles.trophy} aria-hidden="true">🏆</div>
+      <div className={styles.winnerAvatar}>{winner.avatar}</div>
       <div className={styles.winnerName}>{winner.nickname}</div>
       <div className={styles.winnerLabel}>
         {isCurrentPlayer ? 'You won!' : 'Winner!'}

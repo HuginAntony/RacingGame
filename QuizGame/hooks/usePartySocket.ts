@@ -23,6 +23,13 @@ export function usePartySocket(
   const [connected, setConnected] = useState(false);
   const socketRef = useRef<PartySocket | null>(null);
 
+  // Keep a ref so the message handler always calls the *latest* callback
+  // without needing to recreate the socket when the callback changes.
+  const onStateUpdateRef = useRef(onStateUpdate);
+  useEffect(() => {
+    onStateUpdateRef.current = onStateUpdate;
+  });
+
   useEffect(() => {
     if (!roomCode) return;
 
@@ -46,7 +53,7 @@ export function usePartySocket(
       }
       if (msg.type === 'state-update') {
         setGameState(msg.room);
-        onStateUpdate?.(msg.room);
+        onStateUpdateRef.current?.(msg.room);
       } else if (msg.type === 'error') {
         setError(msg.message);
       }
@@ -58,7 +65,6 @@ export function usePartySocket(
       setConnected(false);
       setGameState(null);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomCode]);
 
   const send = useCallback((msg: ClientMessage) => {
@@ -67,3 +73,4 @@ export function usePartySocket(
 
   return { gameState, error, connected, send };
 }
+

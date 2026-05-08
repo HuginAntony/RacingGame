@@ -7,7 +7,7 @@ import { calculateScore } from "@/lib/scoring";
 import { QuestionCard } from "@/components/QuestionCard/QuestionCard";
 import { CountdownRing } from "@/components/CountdownRing/CountdownRing";
 import { NeonButton } from "@/components/NeonButton/NeonButton";
-import { Question, ROUND_DURATION_MS, TOTAL_ROUNDS } from "@/types/game";
+import { Question, ROUND_DURATION_MS } from "@/types/game";
 import styles from "../[code]/page.module.css";
 import soloStyles from "./solo.module.css";
 
@@ -17,6 +17,8 @@ function SoloGamePageInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const nickname = searchParams.get("name") || "Player";
+  const avatar = searchParams.get("avatar") || "";
+  const rounds = Math.max(1, Math.min(50, parseInt(searchParams.get("rounds") || "10", 10)));
 
   const [phase, setPhase] = useState<SoloPhase>("loading");
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -29,7 +31,7 @@ function SoloGamePageInner() {
   const [fetchError, setFetchError] = useState("");
 
   useEffect(() => {
-    fetchQuestions(TOTAL_ROUNDS)
+    fetchQuestions(rounds)
       .then((qs) => {
         console.log('Questions loaded:', qs);
         if (!Array.isArray(qs) || qs.length === 0) {
@@ -136,7 +138,7 @@ function SoloGamePageInner() {
           <span className={soloStyles.scoreVal}>{highScore.toLocaleString()}</span>
         </div>
         <div className={soloStyles.doneActions}>
-          <NeonButton variant="cyan" onClick={() => router.push("/game/solo?name=" + encodeURIComponent(nickname))}>Play Again</NeonButton>
+          <NeonButton variant="cyan" onClick={() => router.push("/game/solo?name=" + encodeURIComponent(nickname) + "&avatar=" + encodeURIComponent(avatar) + "&rounds=" + rounds)}>Play Again</NeonButton>
           <NeonButton variant="ghost" onClick={() => router.push("/")}>Home</NeonButton>
         </div>
       </main>
@@ -164,7 +166,7 @@ function SoloGamePageInner() {
   return (
     <main className={styles.page}>
       <div className={styles.topBar}>
-        <div className={styles.progress}>Q {idx + 1} / {TOTAL_ROUNDS}</div>
+        <div className={styles.progress}>Q {idx + 1} / {rounds}</div>
         {phase === "question" && <CountdownRing secondsLeft={secondsLeft} />}
         {phase === "reveal" && <div className={styles.revealLabel}>Round Result</div>}
         <div className={soloStyles.liveScore}>{score.toLocaleString()} pts</div>

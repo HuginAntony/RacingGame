@@ -14,10 +14,11 @@ import { calculateScore } from '@/lib/scoring';
 // Each function takes the current state and returns a new state object.
 // No side effects. Easily unit-testable.
 
-export function createRoom(code: string, hostId: string, hostname: string): GameRoom {
+export function createRoom(code: string, hostId: string, hostname: string, avatar = '⚡'): GameRoom {
   const host: Player = {
     id: hostId,
     nickname: hostname,
+    avatar,
     score: 0,
     answeredIndex: null,
     isHost: true,
@@ -35,7 +36,7 @@ export function createRoom(code: string, hostId: string, hostname: string): Game
   };
 }
 
-export function joinRoom(room: GameRoom, playerId: string, nickname: string): GameRoom {
+export function joinRoom(room: GameRoom, playerId: string, nickname: string, avatar = '⚡'): GameRoom {
   if (room.phase !== 'lobby') {
     throw new Error('Game already in progress');
   }
@@ -48,6 +49,7 @@ export function joinRoom(room: GameRoom, playerId: string, nickname: string): Ga
   const player: Player = {
     id: playerId,
     nickname: trimmed,
+    avatar,
     score: 0,
     answeredIndex: null,
     isHost: false,
@@ -174,10 +176,36 @@ export function toPublicRoom(room: GameRoom): PublicGameRoom {
     currentQuestionIndex: room.currentQuestionIndex,
     totalRounds: room.totalRounds,
     roundStartedAt: room.roundStartedAt,
+    maxPlayers: room.maxPlayers,
   };
 }
 
 /** All players have submitted an answer */
 export function allAnswered(room: GameRoom): boolean {
   return Object.values(room.players).every((p) => p.answeredIndex !== null);
+}
+
+/**
+ * Re-associate an existing player with a new socket connection ID.
+ * Called when a player navigates from lobby→game (new WS connection)
+ * or refreshes the game page. Preserves score, answeredIndex, etc.
+ * Throws if no player with the given nickname is found.
+ */
+export function rejoinGame(room: GameRoom, newSocketId: string, nickname: string): GameRoom {
+  const normalized = nickname.trim().slice(0, 20);
+  const entry = Object.entries(room.players).find(
+    ([, p]) => p.nickname === normalized
+  );
+  if (!entry) throw new Error('Player not found in this game');
+
+  const [oldId, player] = entry;
+  const { [oldId]: _removed, ...rest } = room.players;
+  const updatedPlayer: Player = { ...player, id: newSocketId };
+  const newHostId = room.hostId === oldId ? newSocketId : room.hostId;
+
+  return {
+    ...room,
+    players: { ...rest, [newSocketId]: updatedPlayer },
+    hostId: newHostId,
+  };
 }

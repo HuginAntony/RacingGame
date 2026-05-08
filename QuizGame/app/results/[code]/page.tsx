@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, Suspense } from "react";
+import { Suspense } from "react";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { usePartySocket } from "@/hooks/usePartySocket";
 import { TrophyBanner } from "@/components/TrophyBanner/TrophyBanner";
+import { Podium } from "@/components/Podium/Podium";
 import { NeonButton } from "@/components/NeonButton/NeonButton";
 import { Player } from "@/types/game";
 import styles from "./page.module.css";
@@ -14,16 +15,11 @@ function ResultsPageInner() {
   const router = useRouter();
   const code = params.code;
   const nickname = searchParams.get("name") || "Player";
-  const joined = useRef(false);
 
-  const { gameState, connected, send } = usePartySocket(code);
-
-  useEffect(() => {
-    if (connected && !joined.current) {
-      joined.current = true;
-      send({ type: "join", nickname });
-    }
-  }, [connected, nickname, send]);
+  // Connect to receive the final state — DO NOT send a join message because
+  // the game is already finished and joinRoom() would throw "Game already in progress".
+  // The party server's onConnect() sends the current state immediately to every new connection.
+  const { gameState } = usePartySocket(code);
 
   const players: Player[] = gameState
     ? Object.values(gameState.players).sort((a, b) => b.score - a.score)
@@ -40,6 +36,10 @@ function ResultsPageInner() {
         <TrophyBanner winner={winner} isCurrentPlayer={isWinner} />
       )}
 
+      {players.length > 0 && (
+        <Podium players={players.slice(0, 3)} nickname={nickname} />
+      )}
+
       <div className={styles.leaderboard}>
         <h2 className={styles.lbTitle}>Final Scores</h2>
         <ol className={styles.lbList}>
@@ -52,6 +52,7 @@ function ResultsPageInner() {
               <span className={styles.lbRank}>
                 {idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : "#" + (idx + 1)}
               </span>
+              <span className={styles.lbAvatar}>{p.avatar}</span>
               <span className={styles.lbName}>{p.nickname}</span>
               <span className={styles.lbScore}>{p.score.toLocaleString()} pts</span>
             </li>

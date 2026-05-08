@@ -8,6 +8,7 @@ export type GamePhase =
 export interface Player {
   id: string;
   nickname: string;
+  avatar: string;   // single emoji character
   score: number;
   answeredIndex: number | null; // null = not yet answered this round
   isHost: boolean;
@@ -44,8 +45,8 @@ export interface GameRoom {
 // ─── WebSocket message types ──────────────────────────────────────────────────
 
 export type ClientMessage =
-  | { type: 'join'; nickname: string }
-  | { type: 'start' }
+  | { type: 'join'; nickname: string; avatar: string }
+  | { type: 'start'; rounds?: number }
   | { type: 'answer'; answerIndex: number };
 
 export type ServerMessage =
@@ -62,11 +63,12 @@ export interface PublicGameRoom {
   currentQuestionIndex: number;
   totalRounds: number;
   roundStartedAt: number;
+  maxPlayers: number;
 }
 
 // ─── Scoring ──────────────────────────────────────────────────────────────────
 export const ROUND_DURATION_MS = 10_000;
 export const BASE_POINTS = 100;
 export const TIME_BONUS_PER_SECOND = 10;
-export const MAX_PLAYERS = 8;
+export const MAX_PLAYERS = 12;
 export const TOTAL_ROUNDS = 10;
